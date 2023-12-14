@@ -7,12 +7,14 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+typedef unsigned int UI;
+
 typedef struct {
-    int bits[4];
+    UI bits[4];
 } s21_decimal;
 
 typedef struct {
-    unsigned int bits[8];
+    UI bits[8];
     int exp;
     int sign;
     int left_zeros;
@@ -20,13 +22,6 @@ typedef struct {
     int first_right_one;
 } big_decimal;
 
-int get_bit(s21_decimal s21, int order);
-
-void set_bit(s21_decimal *s21, int order, int set_value);
-
-void multiply_with_10();
-
-void normalize();
 
 
 ////////////////////////////////////////////////////////////////
@@ -104,5 +99,57 @@ Return value - code error:
 
 
 ////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////
+//S21 AND BIG
+
+big_decimal from_s21_to_big_decimal(s21_decimal s21); //s21->big
+
+s21_decimal from_big_to_s21_decimal(big_decimal big) //big->s21
+
+
+////////////////////////////////////////////////////////////////
+//S21: MANT
+
+UI get_bit(s21_decimal s21, int order); //s21
+
+void set_bit(s21_decimal *s21, int order, int set_value); //s21
+
+
+//S21: EXP
+
+UI get_exp(s21_decimal s21); //s21
+
+//void set_exp(s21_decimal s21); //s21
+
+void get_sign(s21_decimal s21); //s21
+
+
+////////////////////////////////////////////////////////////////
+//BIG: MANT
+
+//void mant_add(); //big
+
+//void mant_div(); //big
+
+//void mant_mul(); //big
+
+//void man_compare(); //big (for full add)
+
+
+
+////////////////////////////////////////////////////////////////
+
+//void s21_print(); //s21
+
+//void big_print(); //big
+
+//void multiply_with_10();
+
+//void normalize();
+
+
 
 #endif
