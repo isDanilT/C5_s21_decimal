@@ -124,7 +124,8 @@ void set_zeros_ones_parameters(big_decimal *big);  // s21
 ////////////////////////////////////////////////////////////////
 // BIG: MANT
 
-// void mant_add(); //big
+void mant_add(big_decimal *big1, big_decimal *big2,
+              big_decimal *result);  // big
 
 // void mant_div(); //big
 

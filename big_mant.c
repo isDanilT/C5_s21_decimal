@@ -34,7 +34,25 @@ void set_bit_big(big_decimal *big, int order, int set_value) {
   }
 }
 
-// void mant_add(); //big
+int mant_add(big_decimal *big1, big_decimal *big2, big_decimal *result) {
+  int remainder = 0;
+  int bit_result = 0;
+  for (int i = 0; i <= BIG_BITS; i++) {
+    bit_result = get_bit_big(*big1, i) + get_bit_big(*big2, i) + remainder;
+    switch (bit_result) {
+      case 0 ... 1:
+        set_bit_big(result, i, bit_result);
+        remainder = 0;
+      case 2 ... 3:
+        set_bit_big(result, i, bit_result % 2);
+        remainder = 1;
+      default:
+        fprintf(stderr, "mant_add: invalid bit_result: %d\n", bit_result);
+        break;
+    }
+  }
+  return remainder;
+}
 
 // void mant_div(); //big
 
