@@ -13,7 +13,20 @@ void from_big_to_s21_decimal(big_decimal big, s21_decimal *s21) {}
 
 // void s21_print(); //s21
 
-// void big_print(); //big
+void big_print(big_decimal *big) {
+  set_zeros_ones_parameters(big);
+  printf("sign: %d,", big->sign);
+  printf("exponent: %d,", big->exp);
+  printf("first bit: %d,", big->first_left_one);
+  printf("count left zeros: %d,", big->left_zeros);
+  printf("last bit: %d,", big->first_right_one);
+  printf("mantissa:");
+  for (int i = 7; i >= 0; i--) {
+    for (int j = 31; j >= 0; j--) {
+      printf("%d", get_bit_big(*big, i * 32 + j));
+    }
+  }
+}
 
 // void multiply_with_10();
 

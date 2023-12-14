@@ -124,10 +124,9 @@ void set_zeros_ones_parameters(big_decimal *big);  // s21
 ////////////////////////////////////////////////////////////////
 // BIG: MANT
 
-void mant_add(big_decimal *big1, big_decimal *big2,
-              big_decimal *result);  // big
+int mant_add(big_decimal *big1, big_decimal *big2, big_decimal *result);  // big
 
-// void mant_div(); //big
+void mant_sub(big_decimal *big1, big_decimal *big2, big_decimal *result);  // big
 
 // void mant_mul(); //big
 
@@ -146,7 +145,7 @@ void from_big_to_s21_decimal(big_decimal big, s21_decimal *s21);  // big->s21
 
 // void s21_print(); //s21
 
-// void big_print(); //big
+void big_print(big_decimal *big);  // big
 
 // void multiply_with_10();
 

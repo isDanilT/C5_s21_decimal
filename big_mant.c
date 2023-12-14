@@ -54,7 +54,16 @@ int mant_add(big_decimal *big1, big_decimal *big2, big_decimal *result) {
   return remainder;
 }
 
-// void mant_div(); //big
+void mant_sub(big_decimal *big1, big_decimal *big2, big_decimal *result) {
+  int remainder = 0;
+  int bit_result = 0;
+  for (int i = 0; i <= BIG_BITS; i++) {
+    bit_result = get_bit_big(*big1, i) - get_bit_big(*big2, i) - remainder;
+    remainder = bit_result < 0;
+    bit_result = abs(bit_result);
+    set_bit_big(result, i, bit_result);
+  }
+}
 
 // void mant_mul(); //big
 
