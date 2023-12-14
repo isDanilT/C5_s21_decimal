@@ -7,6 +7,14 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+
+#define EXP_SHIFT 16;
+#define BIG_BITS 255;
+#define S21_BITS 95;
+
+#define MINUS 0b10000000000000000000000000000000
+#define PLUS 0b00000000000000000000000000000000
+
 typedef unsigned int UI;
 
 typedef struct {
@@ -103,19 +111,12 @@ Return value - code error:
 ////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////
-//S21 AND BIG
 
-big_decimal from_s21_to_big_decimal(s21_decimal s21); //s21->big
-
-s21_decimal from_big_to_s21_decimal(big_decimal big) //big->s21
-
-
-////////////////////////////////////////////////////////////////
 //S21: MANT
 
-UI get_bit(s21_decimal s21, int order); //s21
+UI get_bit_s21(s21_decimal s21, int order); //s21
 
-void set_bit(s21_decimal *s21, int order, int set_value); //s21
+void set_bit_s21(s21_decimal *s21, int order, int set_value); //s21
 
 
 //S21: EXP
@@ -124,7 +125,9 @@ UI get_exp(s21_decimal s21); //s21
 
 //void set_exp(s21_decimal s21); //s21
 
-void get_sign(s21_decimal s21); //s21
+UI get_sign(s21_decimal s21); //s21
+
+void set_zeros_ones_parameters(big_decimal *big); //s21
 
 
 ////////////////////////////////////////////////////////////////
@@ -138,9 +141,17 @@ void get_sign(s21_decimal s21); //s21
 
 //void man_compare(); //big (for full add)
 
+UI get_bit_big(big_decimal big, int order);
+
+void set_bit_big(big_decimal *big, int order, int set_value);
 
 
 ////////////////////////////////////////////////////////////////
+//S21 AND BIG (MAIN)
+
+void from_s21_to_big_decimal(s21_decimal s21, big_decimal *big); //s21->big
+
+void from_big_to_s21_decimal(big_decimal big, s21_decimal *s21); //big->s21
 
 //void s21_print(); //s21
 
