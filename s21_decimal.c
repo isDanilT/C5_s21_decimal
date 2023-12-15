@@ -28,6 +28,15 @@ void big_print(big_decimal *big) {
   }
 }
 
+void reset_big_to_zero(big_decimal *big) {
+  reset_big_mant_to_zero(big);
+  big->exp = 0;
+  big->sign = 0;
+  big->left_zeros = 0;
+  big->first_left_one = 0;
+  big->first_right_one = 0;
+}
+
 // void multiply_with_10();
 
 // void normalize();

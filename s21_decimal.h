@@ -128,7 +128,7 @@ int mant_add(big_decimal *big1, big_decimal *big2, big_decimal *result);  // big
 
 void mant_sub(big_decimal *big1, big_decimal *big2, big_decimal *result);  // big
 
-// void mant_mul(); //big
+int mant_mul(big_decimal big1, big_decimal *big2, big_decimal *result); //big
 
 // void man_compare(); //big (for full add)
 
