@@ -130,7 +130,7 @@ void mant_sub(big_decimal *big1, big_decimal *big2, big_decimal *result);  // bi
 
 int mant_mul(big_decimal big1, big_decimal *big2, big_decimal *result); //big
 
-// void man_compare(); //big (for full add)
+int man_compare(big_decimal *big1, big_decimal *big2); //big (for full add)
 
 UI get_bit_big(big_decimal big, int order);
 
@@ -150,5 +150,7 @@ void big_print(big_decimal *big);  // big
 // void multiply_with_10();
 
 // void normalize();
+
+left_shift_big();
 
 #endif

@@ -101,4 +101,15 @@ void reset_big_mant_to_zero(big_decimal *big) {
 }
 
 
-// void man_compare(); //big (for full add)
+int man_compare(big_decimal *big1, big_decimal *big2) {
+  int result = 0;
+  for (int i = 255; i >= 0; i--) {
+    int bit1 = get_bit_big(*big1, i);
+    int bit2 = get_bit_big(*big2, i);
+    if (bit1 != bit2) {
+      result = bit1 - bit2;
+      break;
+    }
+  }
+  return result;
+}
