@@ -147,8 +147,8 @@ void mant_sub(big_decimal *big1, big_decimal *big2, big_decimal *result) {
 int mant_mul(big_decimal big1, big_decimal *big2, big_decimal *result) {
   int status = 0;
   reset_big_to_zero(result);
-  //
-  //
+  set_zeros_ones_parameters(&big1);
+  set_zeros_ones_parameters(big2);
   for (int i = 0; i <= big2->first_left_one; i++) {
     if (!(i)) {
       if (shift_left_big(&big1, 1) == 1) {
@@ -188,4 +188,93 @@ int mant_compare(big_decimal *big1, big_decimal *big2) {
     }
   }
   return result;
+}
+
+
+// переводим из биг ту с21 со старшим битом не больше 95
+void big_to_s21_decimal_case_95(big_decimal *big, s21_decimal *s21) {
+  for (int i = 0; i < 3; i++) {
+    s21->bits[i] = big->bits[i];
+  }
+}
+
+
+
+
+
+
+
+
+
+
+//ДОФИКСИТЬ:
+
+// переводим из бига в s21
+int big_to_s21_decimal(big_decimal *big, s21_decimal *s21) {
+  int status = 0;
+  // сколько нулей слева, если занулеванное, то one_position_left = -1
+  set_zeros_ones_parameters(big);
+  big_decimal ten = {0};
+  ten.bits[0] = 10;
+  int diff = 0;
+  big_decimal copy_result_big_x =
+      *big;  // x
+                    // для очень маленьких чисел, если экспонента очень большая
+  while (big->exp > 28) {
+    //
+    if (mant_compare(big, &ten) >= 0) {
+      division_with_rest_for10(*big, big);  // y
+      diff++;
+    } else {
+      status = 2;
+      break;
+    }
+  }
+  if (diff > 0) bank_round(copy_result_big_x, big, diff);
+
+  diff = 0;
+  // если мантиса бига выходит за пределы обычной, то
+  if (go_beyond_big_decimal_s21(big)) {
+    if (big->exp < 1) {
+      status = 1;
+    } else {
+      copy_result_big_x = *big;
+      // делим резалт на 10 до тех пор пока
+      while (go_beyond_big_decimal_s21(big) &&
+             (big->exp > 0)) {
+        division_with_rest_for10(*big, big);
+        diff++;
+      }
+      if (diff > 0) bank_round(copy_result_big_x, big, diff);
+    }
+  }
+
+  // если все равно выходит за пределы мантисы
+  if (go_beyond_big_decimal_s21(big)) status = 1;
+
+  if ((status == 1) && big->sign) status = 2;
+
+  if (!status) {
+    if (big->sign) set_sign(s21, 1);
+    // если нет переполнения, то запихиваем биг децимал в s21_dec
+    big_to_s21_decimal_case_95(big, s21);
+    set_exp(s21, big->exp);
+  }
+  // print_big_decimal(big);
+  return status;
+}
+
+
+
+
+// приводим big_decimal к одной экспоненте
+void normalize_big(big_decimal *big1, big_decimal *big2) {
+  int def = big1->exp - big2->exp;
+  if (def > 0) {
+    multiply_10_mantis_big(big2, def);
+    set_zeros_ones_parameters(big2);
+  } else if (def < 0) {
+    multiply_10_mantis_big(big1, -def);
+    set_zeros_ones_parameters(big1);
+  }
 }
