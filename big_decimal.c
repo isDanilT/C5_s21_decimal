@@ -79,7 +79,6 @@ void set_zeros_ones_parameters(big_decimal *big) {
   }
 }
 
-
 void reset_big_to_zero(big_decimal *big) {
   reset_big_mant_to_zero(big);
   big->exp = 0;
@@ -88,6 +87,29 @@ void reset_big_to_zero(big_decimal *big) {
   big->first_left_one = 0;
   big->first_right_one = 0;
 }
+
+// сдвигаем big_decimal влево по битам. 1 - вылезли за пределы, 0 - ок
+int shift_left_big(big_decimal *big, int shift) {
+  int status = 0;
+  set_zeros_ones_parameters(big);
+  if (255 - big->first_left_one < shift) {
+    status = 1;
+  }
+  for (int i = big->first_left_one; i >= 0; i--) {
+    // для того, чтобы не выходить за пределы массива
+    if ((i + shift) <= 255) {
+      set_bit_big(big, i + shift, get_bit_big(*big, i));
+    }
+  }
+  // доставляем нули справа
+  for (int i = 0; i < shift; i++) {
+    set_bit_big(big, i, 0);
+  }
+  set_zeros_ones_parameters(big);  // устанавливаем нули слева и позицию первой 1
+
+  return status;
+}
+
 
 int mant_add(big_decimal *big1, big_decimal *big2, big_decimal *result) {
   int remainder = 0;
@@ -129,7 +151,7 @@ int mant_mul(big_decimal big1, big_decimal *big2, big_decimal *result) {
   //
   for (int i = 0; i <= big2->first_left_one; i++) {
     if (!(i)) {
-      if (left_shift_big(&big1, 1) == 1) {
+      if (shift_left_big(&big1, 1) == 1) {
         status = 1;
         break;
       }
